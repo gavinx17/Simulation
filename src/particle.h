@@ -35,21 +35,21 @@ class Particle  {
         }
         if (y - radius <= -1.0f) {
             y = -1.0f + radius;
-            vy *= -0.85f;
-            vx *= 0.85f; // horizontal friction
+            vy *= -0.94f;
+            vx *= 0.94f; // horizontal friction
         }
         if(y - radius >= 1.0f)    {
             vy *= -0.85; // slow down as it bounces
             y = 1.0f - radius;
         }
         vy += (gravity * dt);
-        x += vx * dt;
-        y += vy * dt;
+        x += (vx * dt);
+        y += (vy * dt);
     }
     bool CheckCollision(Particle one, Particle two) {
         float dx = one.x - two.x;
         float dy = one.y - two.y;
-        float distance = sqrt(dx * dx + dy * dy);
+        float distance = sqrt(dx * dx + dy * dy);   // Distance formula
         return distance <= (one.radius + two.radius);
     }
 };

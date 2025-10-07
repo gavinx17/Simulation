@@ -4,8 +4,8 @@
 #include <vector>
 #include "particle.h"
 
-#define max 1
-#define min -1
+#define max_size 1
+#define min_size -1
 
 using namespace std;
 
@@ -22,13 +22,13 @@ void error_callback(int error, const char* description)
 
 int main(void)
 {
-    const int num = 2;
+    const int num = 5;
     int particleNumber = 0;
     int height = 720, width = 1280;
     Particle p[num];
     for (int i = 0; i < num; i++) {
-        float startX = ((float)rand() / RAND_MAX) * (max - (min)) - max; // random between -1 and 1
-        float startY = ((float)rand() / RAND_MAX) * (max - (min)) - max;
+        float startX = ((float)rand() / RAND_MAX) * (max_size - (min_size)) - max_size; // random between -1 and 1
+        float startY = ((float)rand() / RAND_MAX) * (max_size - (min_size)) - max_size;
         p[i] = Particle(startX, startY, 0.03f);
     }
     // Initialize GLFW
@@ -59,8 +59,10 @@ int main(void)
             p[i].Update(0.001f);
             for (int j = i + 1; j < num; j++) {
                 if (p[i].CheckCollision(p[i], p[j])) {
-                    p[i].vx += 0.05f;
-                    p[j].vx -= 0.05f;
+                    p[i].vx += 0.006f;
+                    p[j].vx -= 0.006f;
+                    p[i].vy += 0.006f;
+                    p[j].vy -= 0.006f;
                 }
             }
         }
@@ -73,6 +75,8 @@ int main(void)
             }
             if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)  {
                 p[particleNumber].vy += 0.005f;
+              //  if(p[particleNumber].y - p[particleNumber].radius <= -1.0f)
+                p[particleNumber].y += 0.005f;
             }
             static bool tabPressed = false;
             if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
