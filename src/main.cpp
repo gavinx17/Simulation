@@ -4,6 +4,9 @@
 #include <vector>
 #include "particle.h"
 
+#define max 1
+#define min -1
+
 using namespace std;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -19,13 +22,13 @@ void error_callback(int error, const char* description)
 
 int main(void)
 {
-    const int size = 2;
+    const int num = 2;
     int particleNumber = 0;
     int height = 720, width = 1280;
-    Particle p[size];
-    for (int i = 0; i < size; i++) {
-        float startX = ((float)rand() / RAND_MAX) * 2.0f - 1.0f; // random between -1 and 1
-        float startY = ((float)rand() / RAND_MAX) * 2.0f - 1.0f;
+    Particle p[num];
+    for (int i = 0; i < num; i++) {
+        float startX = ((float)rand() / RAND_MAX) * (max - (min)) - max; // random between -1 and 1
+        float startY = ((float)rand() / RAND_MAX) * (max - (min)) - max;
         p[i] = Particle(startX, startY, 0.03f);
     }
     // Initialize GLFW
@@ -51,9 +54,15 @@ int main(void)
     {
         glClear(GL_COLOR_BUFFER_BIT);
         glColor3f(0.078f, 0.75f, 0.078f);
-        for(int i = 0; i < size; i++)   {
+        for(int i = 0; i < num; i++)   {
             p[i].DrawParticle();
             p[i].Update(0.001f);
+            for (int j = i + 1; j < num; j++) {
+                if (p[i].CheckCollision(p[i], p[j])) {
+                    p[i].vx += 0.05f;
+                    p[j].vx -= 0.05f;
+                }
+            }
         }
             // check input
             if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
@@ -62,13 +71,13 @@ int main(void)
             if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
                 p[particleNumber].vx += -0.006f;
             }
-            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-                p[particleNumber].vy += 0.006f;
+            if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)  {
+                p[particleNumber].vy += 0.005f;
             }
             static bool tabPressed = false;
             if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
                 if (!tabPressed) {
-                    particleNumber = (particleNumber + 1) % size;
+                    particleNumber = (particleNumber + 1) % num;
                     tabPressed = true;
                 }
             } else {
