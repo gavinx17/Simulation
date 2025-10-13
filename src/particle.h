@@ -1,9 +1,11 @@
-#include <iostream>
-#include <math.h>
-#include <vector>
-#include <GLFW/glfw3.h>
 #ifndef PARTICLE_H
 #define PARTICLE_H
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <cmath>
+
+class Block;
 
 class Particle  {
     public:
@@ -24,33 +26,8 @@ class Particle  {
         glEnd();
     }
 
-    void Update(float dt)   {
-        if(x - radius <= -1.0f)    {
-            vx *= -0.8f;
-            x = -1.0f + radius;
-        }
-        if(x + radius >= 1.0f)    {
-            vx *= -0.8f;
-            x = 1.0f - radius;
-        }
-        if (y - radius <= -1.0f) {
-            y = -1.0f + radius;
-            vy *= -0.94f;
-            vx *= 0.94f; // horizontal friction
-        }
-        if(y - radius >= 1.0f)    {
-            vy *= -0.85; // slow down as it bounces
-            y = 1.0f - radius;
-        }
-        vy += (gravity * dt);
-        x += (vx * dt);
-        y += (vy * dt);
-    }
-    bool CheckCollision(Particle one, Particle two) {
-        float dx = one.x - two.x;
-        float dy = one.y - two.y;
-        float distance = sqrt(dx * dx + dy * dy);   // Distance formula
-        return distance <= (one.radius + two.radius);
-    }
+    void Update(float dt);
+    bool CheckCollision(Particle one, Particle two);
+    bool CheckCollision(Particle p, Block b);
 };
 #endif
